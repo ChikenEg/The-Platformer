@@ -7,24 +7,33 @@ public class PlayerScript : MonoBehaviour
 {
 
     private Rigidbody2D rd2d;
+    public GameObject player;
+    public GameObject winTextObject;
+    public GameObject loseTextObject;
     public float speed;
     public Text score;
-    private int scoreValue = 0;
-    public GameObject winTextObject;
     public Text lives;
+    private int scoreValue = 0;
     private int livesValue = 3;
-    
+    public AudioSource musicSource;
+    public AudioClip musicClipOne;
+    public AudioClip musicClipTwo;
+     
     // Start is called before the first frame update
     void Start()
     {
         rd2d = GetComponent<Rigidbody2D>();
         score.text = scoreValue.ToString();
         
-        winTextObject.SetActive(false);
-        
         rd2d = GetComponent<Rigidbody2D>();
         lives.text = livesValue.ToString();
         
+        winTextObject.SetActive(false);
+        loseTextObject.SetActive(false); 
+
+        musicSource.clip = musicClipOne;
+        musicSource.Play(); 
+        musicSource.loop = true;
     }
 
     // Update is called once per frame
@@ -43,10 +52,17 @@ public class PlayerScript : MonoBehaviour
             Application.Quit();
         }
 
-        if(scoreValue == 4)
+        if(scoreValue == 10)
         {
             winTextObject.SetActive(true);
         }
+
+        if(livesValue == 0)
+        {
+            loseTextObject.SetActive(true);
+            Destroy(player);
+        }
+         
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -65,10 +81,6 @@ public class PlayerScript : MonoBehaviour
             Destroy(collision.collider.gameObject);
         }
         
-        if(scoreValue == 14)
-        {
-            transform.position = new Vector3(50.0f, 0.5f, 0.0f);
-        }  
     } 
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -80,6 +92,12 @@ public class PlayerScript : MonoBehaviour
                 rd2d.AddForce(new Vector2(0, 3),ForceMode2D.Impulse);
             }
         }
+        
+        if(scoreValue == 4)
+        {
+            transform.position = new Vector3(54.94f, 1.4f, 0.0f);
+            livesValue = 3;
+        } 
     }
     
 }
